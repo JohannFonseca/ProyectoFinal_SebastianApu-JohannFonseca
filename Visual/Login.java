@@ -1,9 +1,9 @@
+package Visual;
 // aca es la ventana de Login
 
 //Librerias
 
 import javax.swing.*; 
-import java.awt.*;    
 public class Login extends JFrame {
 
     // Constructor de la ventana
