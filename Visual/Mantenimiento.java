@@ -1,8 +1,9 @@
 package Visual;
 
-// Librerias
-import javax.swing.*; 
+// Librerías
+import javax.swing.*;
 import java.awt.*;    
+import java.awt.event.*;  // Importar para ActionListener
 
 public class Mantenimiento extends JFrame {
 
@@ -49,9 +50,32 @@ public class Mantenimiento extends JFrame {
         botonA2.setBounds(100, 270, 300, 50); 
         add(botonA2); 
 
+        // Acción para el botón de "Administrar Organizadores"
+        botonA1.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // Crear y mostrar la ventana de AdOrganizadores
+                AdOrganizadores ventanaOrganizadores = new AdOrganizadores();
+                ventanaOrganizadores.setVisible(true);
+                // Cerrar la ventana actual (Mantenimiento)
+                dispose();
+            }
+        });
+
+        // Acción para el botón de "Administrar Eventos"
+        botonA2.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // Crear y mostrar la ventana de AdEventos
+                AdEventos ventanaEventos = new AdEventos();
+                ventanaEventos.setVisible(true);
+                // Cerrar la ventana actual (Mantenimiento)
+                dispose();
+            }
+        });
+
         // Centrar la ventana en la pantalla
         setLocationRelativeTo(null);
     }
 
 }
+
 
