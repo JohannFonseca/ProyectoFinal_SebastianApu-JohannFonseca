@@ -4,10 +4,16 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import Conexion.ConexionBD;
 
 public class AdEventos extends JFrame {
     private JTextField txtIdEvento, txtCedulaJuridica, txtUbicacion, txtCapacidad, txtTitulo;
     private JTextArea txtAreaResultado;
+    private ConexionBD conector= new ConexionBD();
 
     public AdEventos() {
         setTitle("Administrar Eventos");
@@ -99,11 +105,53 @@ public class AdEventos extends JFrame {
                 String ubicacion = txtUbicacion.getText();
                 String capacidad = txtCapacidad.getText();
                 String titulo = txtTitulo.getText();
+                Connection conexion = null;;
+                PreparedStatement preparar = null;
+                try {
+                  conexion = conector.getConexion();
+                            
+                    conexion.setAutoCommit(true);
+                    String Sentencia = "{CALL actualizarEvento(?,?,?,?,?)}";
+                    preparar = conexion.prepareStatement(Sentencia);
+                    preparar.setString(1, idEvento);
+                    preparar.setString(2,titulo);
+                    preparar.setString(3,titulo);
+                    preparar.setString(4,titulo);
+                    preparar.setString(5,titulo); //cambiar
+                    
+
+
+                    int exito = preparar.executeUpdate();
+                    if (exito > 0) {
+                        JOptionPane.showMessageDialog(null, "La persona se ha actualizado con exito del banco");
+                    } else {
+                        JOptionPane.showMessageDialog(null, "No se encuentra persona con ese Id");
+                    }
+
+                } catch (SQLException e1) {
+
+                    e1.printStackTrace();
+                } finally {
+                    {
+                        try {
+                            if (conexion != null)
+                                conexion.close();
+                            if (preparar != null)
+                                preparar.close();
+
+                        } catch (SQLException e1) {
+                            e1.printStackTrace();
+                        }
+                    }
+                }
 
                 // Aquí iría la lógica para actualizar el evento
                 txtAreaResultado.setText("Evento actualizado: " + titulo);
             }
         });
+
+
+
 
         // Acción de Eliminar
         btnEliminar.addActionListener(new ActionListener() {

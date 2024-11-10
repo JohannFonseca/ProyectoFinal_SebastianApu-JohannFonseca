@@ -10,5 +10,8 @@ public class Main {
 
         // Hacer la ventana visible
         ventana.setVisible(true);
+
+        
     }
+    
 }
