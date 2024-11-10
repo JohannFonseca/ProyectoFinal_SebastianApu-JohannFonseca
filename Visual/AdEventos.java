@@ -1,12 +1,11 @@
 package Visual;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import Conexion.ConexionBD;
 
@@ -86,13 +85,45 @@ public class AdEventos extends JFrame {
         // Acción de Insertar
         btnInsertar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                String idEvento = txtIdEvento.getText();
                 String cedulaJuridica = txtCedulaJuridica.getText();
                 String ubicacion = txtUbicacion.getText();
                 String capacidad = txtCapacidad.getText();
                 String titulo = txtTitulo.getText();
-
-                // Aquí iría la lógica para insertar el evento
+                Connection conexion = null;
+                PreparedStatement preparar = null;
+        
+                try {
+                    conexion = conector.getConexion();
+                    conexion.setAutoCommit(true);
+                    String Sentencia = "{CALL insertEvento(?, ?, ?, ?)}";
+                    preparar = conexion.prepareStatement(Sentencia);
+                    preparar.setString(1, cedulaJuridica);
+                    preparar.setString(2, ubicacion);
+                    preparar.setString(3, capacidad);
+                    preparar.setString(4, titulo);
+        
+                    int filasInsertadas = preparar.executeUpdate();
+                    if (filasInsertadas > 0) {
+                        JOptionPane.showMessageDialog(null, "El evento se ha insertado con éxito.");
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Error al insertar el evento.");
+                    }
+        
+                } catch (SQLException e1) {
+                    e1.printStackTrace();
+                    JOptionPane.showMessageDialog(null, "Error al insertar el evento: " + e1.getMessage());
+                } finally {
+                    try {
+                        if (conexion != null)
+                            conexion.close();
+                        if (preparar != null)
+                            preparar.close();
+                    } catch (SQLException e1) {
+                        e1.printStackTrace();
+                    }
+                }
+        
+                // Mostrar resultado en el área de texto
                 txtAreaResultado.setText("Evento insertado: " + titulo);
             }
         });
@@ -114,9 +145,9 @@ public class AdEventos extends JFrame {
                     String Sentencia = "{CALL actualizarEvento(?,?,?,?,?)}";
                     preparar = conexion.prepareStatement(Sentencia);
                     preparar.setString(1, idEvento);
-                    preparar.setString(2,titulo);
-                    preparar.setString(3,titulo);
-                    preparar.setString(4,titulo);
+                    preparar.setString(2,cedulaJuridica);
+                    preparar.setString(3,ubicacion);
+                    preparar.setString(4,capacidad);
                     preparar.setString(5,titulo); //cambiar
                     
 
@@ -145,8 +176,7 @@ public class AdEventos extends JFrame {
                     }
                 }
 
-                // Aquí iría la lógica para actualizar el evento
-                txtAreaResultado.setText("Evento actualizado: " + titulo);
+                
             }
         });
 
@@ -157,19 +187,97 @@ public class AdEventos extends JFrame {
         btnEliminar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String idEvento = txtIdEvento.getText();
-
-                // Aquí iría la lógica para eliminar el evento
-                txtAreaResultado.setText("Evento eliminado con ID: " + idEvento);
+                Connection conexion = null;
+                PreparedStatement preparar = null;
+        
+                try {
+                    conexion = conector.getConexion();
+                    if (conexion == null) {
+                        txtAreaResultado.setText("Error en la conexión a la base de datos.");
+                        return;
+                    }
+        
+                    String Sentencia = "{CALL eliminarEvento(?)}";
+                    preparar = conexion.prepareStatement(Sentencia);
+                    preparar.setInt(1, Integer.parseInt(idEvento));
+        
+                    int filasEliminadas = preparar.executeUpdate();
+                    if (filasEliminadas > 0) {
+                        txtAreaResultado.setText("Evento eliminado con éxito. ID: " + idEvento);
+                    } else {
+                        txtAreaResultado.setText("No se encontró ningún evento con ID: " + idEvento);
+                    }
+        
+                } catch (SQLException e1) {
+                    e1.printStackTrace();
+                    txtAreaResultado.setText("Error al eliminar el evento: " + e1.getMessage());
+                } catch (NumberFormatException ex) {
+                    txtAreaResultado.setText("ID de evento inválido.");
+                } finally {
+                    try {
+                        if (preparar != null)
+                            preparar.close();
+                        if (conexion != null)
+                            conexion.close();
+                    } catch (SQLException e1) {
+                        e1.printStackTrace();
+                    }
+                }
             }
         });
 
         // Acción de Mostrar
         btnMostrar.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                // Aquí iría la lógica para mostrar los eventos
-                txtAreaResultado.setText("Mostrando todos los eventos.");
+    public void actionPerformed(ActionEvent e) {
+        Connection conexion = null;
+        PreparedStatement preparar = null;
+        ResultSet resultados = null;
+
+        try {
+            conexion = conector.getConexion();
+            String Sentencia = "{CALL mostrar_eventos()}";
+            preparar = conexion.prepareStatement(Sentencia);
+            resultados = preparar.executeQuery();
+
+            StringBuilder resultadoTexto = new StringBuilder();
+            while (resultados.next()) {
+                int idEvento = resultados.getInt("idEvento");
+                String cedulaJuridica = resultados.getString("Cedula_Juridica");
+                String ubicacion = resultados.getString("Ubicacion");
+                String capacidad = resultados.getString("Capacidad");
+                String titulo = resultados.getString("Titulo");
+
+                resultadoTexto.append("ID Evento: ").append(idEvento)
+                              .append(", Cédula Jurídica: ").append(cedulaJuridica)
+                              .append(", Ubicación: ").append(ubicacion)
+                              .append(", Capacidad: ").append(capacidad)
+                              .append(", Título: ").append(titulo)
+                              .append("\n");
             }
-        });
+
+            if (resultadoTexto.length() == 0) {
+                txtAreaResultado.setText("No se encontraron eventos.");
+            } else {
+                txtAreaResultado.setText(resultadoTexto.toString());
+            }
+
+        } catch (SQLException e1) {
+            e1.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error al mostrar los eventos: " + e1.getMessage());
+        } finally {
+            try {
+                if (resultados != null)
+                    resultados.close();
+                if (preparar != null)
+                    preparar.close();
+                if (conexion != null)
+                    conexion.close();
+            } catch (SQLException e1) {
+                e1.printStackTrace();
+            }
+        }
+    }
+});
 
         // Acción de Volver
         btnVolver.addActionListener(new ActionListener() {
