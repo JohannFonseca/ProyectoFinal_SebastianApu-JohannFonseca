@@ -1,9 +1,9 @@
 package Visual;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 
 import Conexion.ConexionBD;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
@@ -11,11 +11,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-
 public class AdOrganizadores extends JFrame {
     private JTextField txtCedulaJuridica, txtNombre;
     private JTextArea txtAreaResultado;
     private ConexionBD conector = new ConexionBD();
+    private JTable table;
+    private DefaultTableModel tableModel;
 
     public AdOrganizadores() {
         setTitle("Administrar Organizadores");
@@ -45,12 +46,19 @@ public class AdOrganizadores extends JFrame {
         lblNombre.setBounds(20, 60, 100, 25);
         txtNombre.setBounds(150, 60, 150, 25);
 
-        txtAreaResultado.setBounds(20, 100, 530, 200); // El área de texto para mostrar resultados
+      /*   txtAreaResultado.setBounds(20, 100, 530, 200); // El área de texto para mostrar resultados */
         btnInsertar.setBounds(20, 320, 120, 30);
         btnActualizar.setBounds(150, 320, 120, 30);
         btnEliminar.setBounds(280, 320, 120, 30);
         btnMostrar.setBounds(410, 320, 120, 30);
         btnVolver.setBounds(230, 360, 120, 30);
+
+        String[] columnNames = { "Cédula Jurídica", "Nombre" };
+        tableModel = new DefaultTableModel(columnNames, 0);
+        table = new JTable(tableModel);
+        JScrollPane scrollPane = new JScrollPane(table);
+        scrollPane.setBounds(20, 100, 400, 200); // Ajusta el tamaño y posición del JScrollPane
+        add(scrollPane);
 
         // Añadir los componentes a la ventana
         add(lblCedulaJuridica);
@@ -64,180 +72,184 @@ public class AdOrganizadores extends JFrame {
         add(btnMostrar);
         add(btnVolver);
 
-        // Acción de Insertar
-        btnInsertar.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                String cedulaJuridica = txtCedulaJuridica.getText();
-                String nombre = txtNombre.getText();
-                Connection conexion = null;
-                PreparedStatement preparar = null;
+       // Acción de Insertar
+btnInsertar.addActionListener(new ActionListener() {
+    public void actionPerformed(ActionEvent e) {
+        String cedulaJuridica = txtCedulaJuridica.getText();
+        String nombre = txtNombre.getText();
+        Connection conexion = null;
+        PreparedStatement preparar = null;
 
-                try {
-                    conexion = conector.getConexion();
-                    if (conexion == null) {
-                        txtAreaResultado.setText("Error en la conexión a la base de datos.");
-                        return;
-                    }
-
-                    conexion.setAutoCommit(true);
-                    String Sentencia = "{CALL insertarOrganizador(?, ?)}";
-                    preparar = conexion.prepareStatement(Sentencia);
-                    preparar.setString(1, cedulaJuridica);
-                    preparar.setString(2, nombre);
-
-                    int filasInsertadas = preparar.executeUpdate();
-                    if (filasInsertadas > 0) {
-                        JOptionPane.showMessageDialog(null, "El organizador se ha insertado con éxito.");
-                    } else {
-                        JOptionPane.showMessageDialog(null, "Error al insertar el organizador.");
-                    }
-
-                } catch (SQLException e1) {
-                    e1.printStackTrace();
-                    JOptionPane.showMessageDialog(null, "Error al insertar el organizador: " + e1.getMessage());
-                } finally {
-                    try {
-                        if (conexion != null)
-                            conexion.close();
-                        if (preparar != null)
-                            preparar.close();
-                    } catch (SQLException e1) {
-                        e1.printStackTrace();
-                    }
-                }
+        try {
+            conexion = conector.getConexion();
+            if (conexion == null) {
+                txtAreaResultado.setText("Error en la conexión a la base de datos.");
+                return;
             }
-        });
 
-        // Acción de Mostrar
-        btnMostrar.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                Connection conexion = null;
-                PreparedStatement preparar = null;
-                ResultSet resultados = null;
+            conexion.setAutoCommit(true);
+            String Sentencia = "{CALL insertarOrganizador(?, ?)}";
+            preparar = conexion.prepareStatement(Sentencia);
+            preparar.setString(1, cedulaJuridica);
+            preparar.setString(2, nombre);
 
-                try {
-                    conexion = conector.getConexion();
-                    String Sentencia = "{CALL mostrarOrganizadores()}";
-                    preparar = conexion.prepareStatement(Sentencia);
-                    resultados = preparar.executeQuery();
-
-                    StringBuilder resultadoTexto = new StringBuilder();
-                    while (resultados.next()) {
-                        String cedulaJuridica = resultados.getString("CedulaJuridica");
-                        String nombre = resultados.getString("Nombre");
-
-                        resultadoTexto.append("Cédula Jurídica: ").append(cedulaJuridica)
-                                      .append(", Nombre: ").append(nombre)
-                                      .append("\n");
-                    }
-
-                    if (resultadoTexto.length() == 0) {
-                        txtAreaResultado.setText("No se encontraron organizadores.");
-                    } else {
-                        txtAreaResultado.setText(resultadoTexto.toString());
-                    }
-
-                } catch (SQLException e1) {
-                    e1.printStackTrace();
-                    JOptionPane.showMessageDialog(null, "Error al mostrar los organizadores: " + e1.getMessage());
-                } finally {
-                    try {
-                        if (resultados != null)
-                            resultados.close();
-                        if (preparar != null)
-                            preparar.close();
-                        if (conexion != null)
-                            conexion.close();
-                    } catch (SQLException e1) {
-                        e1.printStackTrace();
-                    }
-                }
+            int filasInsertadas = preparar.executeUpdate();
+            if (filasInsertadas > 0) {
+                JOptionPane.showMessageDialog(null, "El organizador se ha insertado con éxito.");
+                btnMostrar.doClick(); // Actualizar la tabla después de insertar
+            } else {
+                JOptionPane.showMessageDialog(null, "Error al insertar el organizador.");
             }
-        });
 
-        // Acción de Actualizar
-        btnActualizar.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                String cedulaJuridica = txtCedulaJuridica.getText();
-                String nombre = txtNombre.getText();
-                Connection conexion = null;
-                PreparedStatement preparar = null;
-        
-                try {
-                    conexion = conector.getConexion();
-                    if (conexion == null) {
-                        txtAreaResultado.setText("Error en la conexión a la base de datos.");
-                        return;
-                    }
-        
-                    String Sentencia = "{CALL actualizarOrganizador(?, ?)}"; // Llamada al procedimiento almacenado
-                    preparar = conexion.prepareStatement(Sentencia);
-                    preparar.setString(1, cedulaJuridica);
-                    preparar.setString(2, nombre);
-        
-                    int filasActualizadas = preparar.executeUpdate();
-                    if (filasActualizadas > 0) {
-                        txtAreaResultado.setText("Organizador actualizado con Cédula Jurídica: " + cedulaJuridica);
-                    } else {
-                        txtAreaResultado.setText("No se encontró un organizador con la Cédula Jurídica: " + cedulaJuridica);
-                    }
-        
-                } catch (SQLException e1) {
-                    e1.printStackTrace();
-                    JOptionPane.showMessageDialog(null, "Error al actualizar el organizador: " + e1.getMessage());
-                } finally {
-                    try {
-                        if (preparar != null)
-                            preparar.close();
-                        if (conexion != null)
-                            conexion.close();
-                    } catch (SQLException e1) {
-                        e1.printStackTrace();
-                    }
-                }
+        } catch (SQLException e1) {
+            e1.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error al insertar el organizador: " + e1.getMessage());
+        } finally {
+            try {
+                if (conexion != null)
+                    conexion.close();
+                if (preparar != null)
+                    preparar.close();
+            } catch (SQLException e1) {
+                e1.printStackTrace();
             }
-        });
+        }
+    }
+});
 
-        // Acción de Eliminar
-        btnEliminar.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                String cedulaJuridica = txtCedulaJuridica.getText();
-                Connection conexion = null;
-                PreparedStatement preparar = null;
-        
-                try {
-                    conexion = conector.getConexion();
-                    if (conexion == null) {
-                        txtAreaResultado.setText("Error en la conexión a la base de datos.");
-                        return;
-                    }
-        
-                    String Sentencia = "{CALL eliminaOrganizador(?)}"; // Llamada al procedimiento almacenado
-                    preparar = conexion.prepareStatement(Sentencia);
-                    preparar.setString(1, cedulaJuridica);
-        
-                    int filasEliminadas = preparar.executeUpdate();
-                    if (filasEliminadas > 0) {
-                        txtAreaResultado.setText("Organizador eliminado con Cédula Jurídica: " + cedulaJuridica);
-                    } else {
-                        txtAreaResultado.setText("No se encontró un organizador con la Cédula Jurídica: " + cedulaJuridica);
-                    }
-        
-                } catch (SQLException e1) {
-                    e1.printStackTrace();
-                    JOptionPane.showMessageDialog(null, "Error al eliminar el organizador: " + e1.getMessage());
-                } finally {
-                    try {
-                        if (preparar != null)
-                            preparar.close();
-                        if (conexion != null)
-                            conexion.close();
-                    } catch (SQLException e1) {
-                        e1.printStackTrace();
-                    }
-                }
+// Acción de Actualizar
+btnActualizar.addActionListener(new ActionListener() {
+    public void actionPerformed(ActionEvent e) {
+        String cedulaJuridica = txtCedulaJuridica.getText();
+        String nombre = txtNombre.getText();
+        Connection conexion = null;
+        PreparedStatement preparar = null;
+
+        try {
+            conexion = conector.getConexion();
+            if (conexion == null) {
+                txtAreaResultado.setText("Error en la conexión a la base de datos.");
+                return;
             }
-        });
+
+            String Sentencia = "{CALL actualizarOrganizador(?, ?)}"; // Llamada al procedimiento almacenado
+            preparar = conexion.prepareStatement(Sentencia);
+            preparar.setString(1, cedulaJuridica);
+            preparar.setString(2, nombre);
+
+            int filasActualizadas = preparar.executeUpdate();
+            if (filasActualizadas > 0) {
+                txtAreaResultado.setText("Organizador actualizado con Cédula Jurídica: " + cedulaJuridica);
+                btnMostrar.doClick(); // Actualizar la tabla después de actualizar
+            } else {
+                txtAreaResultado.setText("No se encontró un organizador con la Cédula Jurídica: " + cedulaJuridica);
+            }
+
+        } catch (SQLException e1) {
+            e1.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error al actualizar el organizador: " + e1.getMessage());
+        } finally {
+            try {
+                if (preparar != null)
+                    preparar.close();
+                if (conexion != null)
+                    conexion.close();
+            } catch (SQLException e1) {
+                e1.printStackTrace();
+            }
+        }
+    }
+});
+
+btnMostrar.addActionListener(new ActionListener() {
+    public void actionPerformed(ActionEvent e) {
+        Connection conexion = null;
+        PreparedStatement preparar = null;
+        ResultSet resultados = null;
+
+        try {
+            conexion = conector.getConexion();
+            String Sentencia = "{CALL mostrarOrganizadores()}";
+            preparar = conexion.prepareStatement(Sentencia);
+            resultados = preparar.executeQuery();
+
+            // Limpiar la tabla antes de agregar nuevos datos
+            tableModel.setRowCount(0);
+
+            // Recorrer los resultados y agregar cada fila al modelo de tabla
+            while (resultados.next()) {
+                String cedulaJuridica = resultados.getString("CedulaJuridica");
+                String nombre = resultados.getString("Nombre");
+
+                // Agregar la fila al modelo de la tabla
+                tableModel.addRow(new Object[]{cedulaJuridica, nombre});
+            }
+
+            // Verificar si no se encontraron datos y mostrar un mensaje en la tabla
+            if (tableModel.getRowCount() == 0) {
+                JOptionPane.showMessageDialog(null, "No se encontraron organizadores.");
+            }
+
+        } catch (SQLException e1) {
+            e1.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error al mostrar los organizadores: " + e1.getMessage());
+        } finally {
+            try {
+                if (resultados != null)
+                    resultados.close();
+                if (preparar != null)
+                    preparar.close();
+                if (conexion != null)
+                    conexion.close();
+            } catch (SQLException e1) {
+                e1.printStackTrace();
+            }
+        }
+    }
+});
+
+// Acción de Eliminar
+btnEliminar.addActionListener(new ActionListener() {
+    public void actionPerformed(ActionEvent e) {
+        String cedulaJuridica = txtCedulaJuridica.getText();
+        Connection conexion = null;
+        PreparedStatement preparar = null;
+
+        try {
+            conexion = conector.getConexion();
+            if (conexion == null) {
+                txtAreaResultado.setText("Error en la conexión a la base de datos.");
+                return;
+            }
+
+            String Sentencia = "{CALL eliminaOrganizador(?)}"; // Llamada al procedimiento almacenado
+            preparar = conexion.prepareStatement(Sentencia);
+            preparar.setString(1, cedulaJuridica);
+
+            int filasEliminadas = preparar.executeUpdate();
+            if (filasEliminadas > 0) {
+                txtAreaResultado.setText("Organizador eliminado con Cédula Jurídica: " + cedulaJuridica);
+                btnMostrar.doClick(); // Actualizar la tabla después de eliminar
+            } else {
+                txtAreaResultado.setText("No se encontró un organizador con la Cédula Jurídica: " + cedulaJuridica);
+            }
+
+        } catch (SQLException e1) {
+            e1.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error al eliminar el organizador: " + e1.getMessage());
+        } finally {
+            try {
+                if (preparar != null)
+                    preparar.close();
+                if (conexion != null)
+                    conexion.close();
+            } catch (SQLException e1) {
+                e1.printStackTrace();
+            }
+        }
+    }
+});
+
 
         // Acción de Volver
         btnVolver.addActionListener(new ActionListener() {
@@ -258,4 +270,3 @@ public class AdOrganizadores extends JFrame {
         });
     }
 }
-
