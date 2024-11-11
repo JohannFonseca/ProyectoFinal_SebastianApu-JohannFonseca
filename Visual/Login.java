@@ -32,39 +32,48 @@ public class Login extends JFrame {
         setLayout(null);
 
         // Color de fondo de la ventana
-        getContentPane().setBackground(new Color(23, 92, 101)); 
+        getContentPane().setBackground(new Color(230, 214, 144)); 
 
         // Crear el primer JLabel para la primera línea de texto
-        JLabel tituloLabel1 = new JLabel("Login");
-        tituloLabel1.setBounds(115, 30, 400, 40); 
-        tituloLabel1.setForeground(Color.WHITE); 
+        JLabel tituloLabel1 = new JLabel("Ingresa tu Usuario");
+        tituloLabel1.setBounds(60, 30, 400, 40); 
+        tituloLabel1.setForeground(Color.BLACK); 
         tituloLabel1.setFont(new Font("Helvetica", Font.BOLD, 20)); 
         add(tituloLabel1);
 
-        // Etiqueta y campo para idUsuario
-        JLabel userIdLabel = new JLabel("ID de Usuario:");
-        userIdLabel.setBounds(40, 90, 100, 30);
-        userIdLabel.setForeground(Color.WHITE);
-        add(userIdLabel);
+        ImageIcon userIcon = new ImageIcon("Imagenes/id.png"); // Ruta de la imagen
+        Image scaledUserImage = userIcon.getImage().getScaledInstance(25, 25, Image.SCALE_SMOOTH); // Escalar la imagen
+        ImageIcon scaledUserIcon = new ImageIcon(scaledUserImage); // Crear un nuevo ImageIcon con la imagen escalada
+        JLabel userIconLabel = new JLabel(scaledUserIcon); // Usar el ImageIcon escalado en el JLabel
+        userIconLabel.setBounds(30, 90, 30, 30); // Posición y tamaño de la imagen
+        add(userIconLabel);
+
 
         idtJTextField = new JTextField();
-        idtJTextField.setBounds(150, 90, 100, 30);
+        idtJTextField.setBounds(70, 90, 160, 30);
         add(idtJTextField);
 
-        // Etiqueta y campo para contraseña
-        JLabel passwordLabel = new JLabel("Contraseña:");
-        passwordLabel.setBounds(40, 130, 100, 30);
-        passwordLabel.setForeground(Color.WHITE);
-        add(passwordLabel);
+        ImageIcon passwordIcon = new ImageIcon("Imagenes/contraseña.png"); // Ruta de la imagen
+        Image scaledPasswordImage = passwordIcon.getImage().getScaledInstance(25, 25, Image.SCALE_SMOOTH); // Escalar la imagen
+        ImageIcon scaledPasswordIcon = new ImageIcon(scaledPasswordImage); // Crear un nuevo ImageIcon con la imagen escalada
+        JLabel passwordIconLabel = new JLabel(scaledPasswordIcon); // Usar el ImageIcon escalado en el JLabel
+        passwordIconLabel.setBounds(30, 130, 30, 30); // Posición y tamaño de la imagen
+        add(passwordIconLabel);
+    
 
         contrasenatexField = new JPasswordField();
-        contrasenatexField.setBounds(150, 130, 100, 30);
+        contrasenatexField.setBounds(70, 130, 160, 30);
         add(contrasenatexField);
 
         // Crear botón "Ingresar" y definir su posición y tamaño
         JButton botonA1 = new JButton("Ingresar");
-        botonA1.setBounds(100, 200, 100, 50); 
-        add(botonA1); 
+        botonA1.setBounds(90, 170, 100, 50);
+        botonA1.setFont(new Font("Arial", Font.BOLD, 15));  
+        botonA1.setContentAreaFilled(false); // Hace el área de contenido transparente
+        botonA1.setBorderPainted(false); // Elimina el borde del botón
+        botonA1.setForeground(Color.BLACK); // Cambia el color del texto para mejor visibilidad
+        add(botonA1);
+        
 
         // Acción para el botón de "Ingresar"
         botonA1.addActionListener(new ActionListener() {
