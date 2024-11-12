@@ -24,7 +24,7 @@ public class Login extends JFrame {
         setTitle("Login");
 
         // Tamaño de la ventana
-        setSize(300, 300);
+        setSize(300, 280);
 
         // Configuración para cerrar la ventana al presionar la 'X'
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -67,10 +67,10 @@ public class Login extends JFrame {
 
         // Crear botón "Ingresar" y definir su posición y tamaño
         JButton botonA1 = new JButton("Ingresar");
-        botonA1.setBounds(85, 170, 120, 50);
+        botonA1.setBorder(new RoundedBorder(10));
+        botonA1.setBounds(95, 180, 100, 20);
         botonA1.setFont(new Font("Arial", Font.BOLD, 15));  
         botonA1.setContentAreaFilled(false); // Hace el área de contenido transparente
-        botonA1.setBorderPainted(false); // Elimina el borde del botón
         botonA1.setForeground(Color.BLACK); // Cambia el color del texto para mejor visibilidad
         add(botonA1);
         
