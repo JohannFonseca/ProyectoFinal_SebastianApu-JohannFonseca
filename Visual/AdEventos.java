@@ -54,9 +54,6 @@ public class AdEventos extends JFrame {
         JLabel lblIdEvento = new JLabel("ID Evento");
         lblIdEvento.setBounds(45, 20, 100, 25);
         txtIdEvento.setBounds(20, 60, 120, 25);
-        JTextField txtIdEvento = new JTextField("Autonumérico");
-        txtIdEvento.setBounds(20, 60, 120, 25);
-        txtIdEvento.setForeground(Color.GRAY);
         lblIdEvento.setForeground(Color.WHITE); 
 
         JLabel lblCedulaJuridica = new JLabel("Cédula Jurídica");
