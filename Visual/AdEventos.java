@@ -1,24 +1,32 @@
 package Visual;
 
 import javax.swing.*;
+
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.concurrent.LinkedBlockingDeque;
+
 import Conexion.ConexionBD;
+import javax.swing.table.DefaultTableModel;
 
 public class AdEventos extends JFrame {
     private JTextField txtIdEvento, txtCedulaJuridica, txtUbicacion, txtCapacidad, txtTitulo;
     private JTextArea txtAreaResultado;
+    private JTable tablaEventos;
+    private DefaultTableModel tableModel;
     private ConexionBD conector= new ConexionBD();
 
     public AdEventos() {
         setTitle("Administrar Eventos");
-        setSize(600, 600);
+        setSize(750, 480);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(null); // Usamos null para manejar las coordenadas manualmente
+        getContentPane().setBackground(new Color(46, 64, 83)); 
 
         // Definir los campos de texto
         txtIdEvento = new JTextField(10);
@@ -37,32 +45,43 @@ public class AdEventos extends JFrame {
         JButton btnVolver = new JButton("Volver");
 
         // Ubicación y tamaño de los componentes (definir coordenadas X, Y, ancho, alto)
-        JLabel lblIdEvento = new JLabel("ID Evento:");
-        lblIdEvento.setBounds(20, 20, 100, 25);
-        txtIdEvento.setBounds(130, 20, 150, 25);
 
-        JLabel lblCedulaJuridica = new JLabel("Cédula Jurídica:");
-        lblCedulaJuridica.setBounds(20, 60, 100, 25);
-        txtCedulaJuridica.setBounds(130, 60, 150, 25);
+        tableModel = new DefaultTableModel(new String[]{"ID Evento", "Cédula Jurídica", "Ubicación", "Capacidad", "Título"}, 0);
+        tablaEventos = new JTable(tableModel);
+        JScrollPane scrollPane = new JScrollPane(tablaEventos);
+        scrollPane.setBounds(5, 100, 730, 200);
 
-        JLabel lblUbicacion = new JLabel("Ubicación:");
-        lblUbicacion.setBounds(20, 100, 100, 25);
-        txtUbicacion.setBounds(130, 100, 150, 25);
+        JLabel lblIdEvento = new JLabel("ID Evento");
+        lblIdEvento.setBounds(45, 20, 100, 25);
+        txtIdEvento.setBounds(20, 60, 120, 25);
+        lblIdEvento.setForeground(Color.WHITE); 
 
-        JLabel lblCapacidad = new JLabel("Capacidad:");
-        lblCapacidad.setBounds(20, 140, 100, 25);
-        txtCapacidad.setBounds(130, 140, 150, 25);
+        JLabel lblCedulaJuridica = new JLabel("Cédula Jurídica");
+        lblCedulaJuridica.setBounds(170, 20, 100, 25);
+        txtCedulaJuridica.setBounds(160, 60, 120, 25);
+        lblCedulaJuridica.setForeground(Color.WHITE); 
 
-        JLabel lblTitulo = new JLabel("Título:");
-        lblTitulo.setBounds(20, 180, 100, 25);
-        txtTitulo.setBounds(130, 180, 150, 25);
+        JLabel lblUbicacion = new JLabel("Ubicación");
+        lblUbicacion.setBounds(330, 20, 100, 25);
+        txtUbicacion.setBounds(300, 60, 120, 25);
+        lblUbicacion.setForeground(Color.WHITE); 
 
-        txtAreaResultado.setBounds(20, 220, 530, 200); // El área de texto para mostrar resultados
-        btnInsertar.setBounds(20, 440, 120, 30);
-        btnActualizar.setBounds(150, 440, 120, 30);
-        btnEliminar.setBounds(280, 440, 120, 30);
-        btnMostrar.setBounds(410, 440, 120, 30);
-        btnVolver.setBounds(230, 480, 120, 30);
+        JLabel lblCapacidad = new JLabel("Capacidad");
+        lblCapacidad.setBounds(470, 20, 100, 25);
+        txtCapacidad.setBounds(440, 60, 120, 25);
+        lblCapacidad.setForeground(Color.WHITE); 
+
+        JLabel lblTitulo = new JLabel("Título");
+        lblTitulo.setBounds(620, 20, 100, 25);
+        txtTitulo.setBounds(580, 60, 120, 25);
+        lblTitulo.setForeground(Color.WHITE); 
+
+      /*   txtAreaResultado.setBounds(20, 220, 530, 200); // El área de texto para mostrar resultados */
+        btnInsertar.setBounds(60, 330, 120, 30);
+        btnActualizar.setBounds(220, 330, 120, 30);
+        btnEliminar.setBounds(380, 330, 120, 30);
+        btnMostrar.setBounds(540, 330, 120, 30);
+        btnVolver.setBounds(300, 400, 120, 30);
 
         // Añadir los componentes a la ventana
         add(lblIdEvento);
@@ -75,7 +94,7 @@ public class AdEventos extends JFrame {
         add(txtCapacidad);
         add(lblTitulo);
         add(txtTitulo);
-        add(txtAreaResultado);
+        add(scrollPane); // Añadir el scroll con la tabla
         add(btnInsertar);
         add(btnActualizar);
         add(btnEliminar);
@@ -228,56 +247,54 @@ public class AdEventos extends JFrame {
 
         // Acción de Mostrar
         btnMostrar.addActionListener(new ActionListener() {
-    public void actionPerformed(ActionEvent e) {
-        Connection conexion = null;
-        PreparedStatement preparar = null;
-        ResultSet resultados = null;
+            public void actionPerformed(ActionEvent e) {
+                Connection conexion = null;
+                PreparedStatement preparar = null;
+                ResultSet resultados = null;
 
-        try {
-            conexion = conector.getConexion();
-            String Sentencia = "{CALL mostrar_eventos()}";
-            preparar = conexion.prepareStatement(Sentencia);
-            resultados = preparar.executeQuery();
+                try {
+                    conexion = conector.getConexion();
+                    String Sentencia = "{CALL mostrar_eventos()}";
+                    preparar = conexion.prepareStatement(Sentencia);
+                    resultados = preparar.executeQuery();
 
-            StringBuilder resultadoTexto = new StringBuilder();
-            while (resultados.next()) {
-                int idEvento = resultados.getInt("idEvento");
-                String cedulaJuridica = resultados.getString("Cedula_Juridica");
-                String ubicacion = resultados.getString("Ubicacion");
-                String capacidad = resultados.getString("Capacidad");
-                String titulo = resultados.getString("Titulo");
+                    // Limpiar la tabla antes de agregar nuevos datos
+                    tableModel.setRowCount(0);
 
-                resultadoTexto.append("ID Evento: ").append(idEvento)
-                              .append(", Cédula Jurídica: ").append(cedulaJuridica)
-                              .append(", Ubicación: ").append(ubicacion)
-                              .append(", Capacidad: ").append(capacidad)
-                              .append(", Título: ").append(titulo)
-                              .append("\n");
+                    // Recorrer los resultados y agregar cada fila al modelo de tabla
+                    while (resultados.next()) {
+                        int idEvento = resultados.getInt("idEvento");
+                        String cedulaJuridica = resultados.getString("Cedula_Juridica");
+                        String ubicacion = resultados.getString("Ubicacion");
+                        String capacidad = resultados.getString("Capacidad");
+                        String titulo = resultados.getString("Titulo");
+
+                        // Agregar la fila al modelo de la tabla
+                        tableModel.addRow(new Object[]{idEvento, cedulaJuridica, ubicacion, capacidad, titulo});
+                    }
+
+                    // Verificar si no se encontraron datos y mostrar un mensaje
+                    if (tableModel.getRowCount() == 0) {
+                        JOptionPane.showMessageDialog(null, "No se encontraron eventos.");
+                    }
+
+                } catch (SQLException e1) {
+                    e1.printStackTrace();
+                    JOptionPane.showMessageDialog(null, "Error al mostrar los eventos: " + e1.getMessage());
+                } finally {
+                    try {
+                        if (resultados != null)
+                            resultados.close();
+                        if (preparar != null)
+                            preparar.close();
+                        if (conexion != null)
+                            conexion.close();
+                    } catch (SQLException e1) {
+                        e1.printStackTrace();
+                    }
+                }
             }
-
-            if (resultadoTexto.length() == 0) {
-                txtAreaResultado.setText("No se encontraron eventos.");
-            } else {
-                txtAreaResultado.setText(resultadoTexto.toString());
-            }
-
-        } catch (SQLException e1) {
-            e1.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Error al mostrar los eventos: " + e1.getMessage());
-        } finally {
-            try {
-                if (resultados != null)
-                    resultados.close();
-                if (preparar != null)
-                    preparar.close();
-                if (conexion != null)
-                    conexion.close();
-            } catch (SQLException e1) {
-                e1.printStackTrace();
-            }
-        }
-    }
-});
+        });
 
         // Acción de Volver
         btnVolver.addActionListener(new ActionListener() {
