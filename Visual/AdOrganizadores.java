@@ -4,6 +4,8 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
 import Conexion.ConexionBD;
+
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
@@ -23,6 +25,9 @@ public class AdOrganizadores extends JFrame {
         setSize(600, 460);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(null); // Usamos null para manejar las coordenadas manualmente
+
+         // Color de fondo de la ventana
+         getContentPane().setBackground(new Color(46, 64, 83)); 
 
         // Definir los campos de texto
         txtCedulaJuridica = new JTextField(10);

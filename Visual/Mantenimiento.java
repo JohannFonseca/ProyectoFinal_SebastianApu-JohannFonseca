@@ -22,7 +22,7 @@ public class Mantenimiento extends JFrame {
         setLayout(null);
 
         // Color de fondo de la ventana
-        getContentPane().setBackground(new Color(23, 92, 101)); 
+        getContentPane().setBackground(new Color(46, 64, 83)); 
 
         // Crear el primer JLabel para la primera línea de texto
         JLabel tituloLabel1 = new JLabel("Administración de");
