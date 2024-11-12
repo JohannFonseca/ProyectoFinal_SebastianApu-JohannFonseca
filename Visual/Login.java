@@ -67,7 +67,7 @@ public class Login extends JFrame {
 
         // Crear botón "Ingresar" y definir su posición y tamaño
         JButton botonA1 = new JButton("Ingresar");
-        botonA1.setBounds(90, 170, 100, 50);
+        botonA1.setBounds(85, 170, 120, 50);
         botonA1.setFont(new Font("Arial", Font.BOLD, 15));  
         botonA1.setContentAreaFilled(false); // Hace el área de contenido transparente
         botonA1.setBorderPainted(false); // Elimina el borde del botón
