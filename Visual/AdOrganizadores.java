@@ -132,7 +132,6 @@ btnInsertar.addActionListener(new ActionListener() {
     }
 });
 
-// Acción de Actualizar
 btnActualizar.addActionListener(new ActionListener() {
     public void actionPerformed(ActionEvent e) {
         String cedulaJuridica = txtCedulaJuridica.getText();
@@ -147,11 +146,26 @@ btnActualizar.addActionListener(new ActionListener() {
                 return;
             }
 
-            String Sentencia = "{CALL actualizarOrganizador(?, ?)}"; // Llamada al procedimiento almacenado
-            preparar = conexion.prepareStatement(Sentencia);
-            preparar.setString(1, cedulaJuridica);
-            preparar.setString(2, nombre);
+            // Construir la sentencia de actualización dinámica
+            StringBuilder sentenciaBuilder = new StringBuilder("UPDATE organizador SET ");
+            boolean actualizarNombre = !nombre.trim().isEmpty();
 
+            if (actualizarNombre) {
+                sentenciaBuilder.append("nombre = ?");
+            }
+            sentenciaBuilder.append(" WHERE cedulaJuridica = ?");
+
+            // Crear PreparedStatement
+            preparar = conexion.prepareStatement(sentenciaBuilder.toString());
+
+            // Asignar parámetros según lo que se va a actualizar
+            int parametroIndex = 1;
+            if (actualizarNombre) {
+                preparar.setString(parametroIndex++, nombre);
+            }
+            preparar.setString(parametroIndex, cedulaJuridica);
+
+            // Ejecutar actualización
             int filasActualizadas = preparar.executeUpdate();
             if (filasActualizadas > 0) {
                 txtAreaResultado.setText("Organizador actualizado con Cédula Jurídica: " + cedulaJuridica);

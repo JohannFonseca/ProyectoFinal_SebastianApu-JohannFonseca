@@ -132,6 +132,7 @@ public class AdEventos extends JFrame {
                     int filasInsertadas = preparar.executeUpdate();
                     if (filasInsertadas > 0) {
                         JOptionPane.showMessageDialog(null, "El evento se ha insertado con éxito.");
+                        btnMostrar.doClick(); // Actualizar la tabla después de insertar
                     } else {
                         JOptionPane.showMessageDialog(null, "Error al insertar el evento.");
                     }
@@ -155,7 +156,8 @@ public class AdEventos extends JFrame {
             }
         });
 
-        // Acción de Actualizar
+//Actualizar
+
         btnActualizar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String idEvento = txtIdEvento.getText();
@@ -163,49 +165,49 @@ public class AdEventos extends JFrame {
                 String ubicacion = txtUbicacion.getText();
                 String capacidad = txtCapacidad.getText();
                 String titulo = txtTitulo.getText();
-                Connection conexion = null;;
+                Connection conexion = null;
                 PreparedStatement preparar = null;
+        
                 try {
-                  conexion = conector.getConexion();
-                            
-                    conexion.setAutoCommit(true);
-                    String Sentencia = "{CALL actualizarEvento(?,?,?,?,?)}";
-                    preparar = conexion.prepareStatement(Sentencia);
+                    conexion = conector.getConexion();
+                    if (conexion == null) {
+                        JOptionPane.showMessageDialog(null, "Error en la conexión a la base de datos.");
+                        return;
+                    }
+        
+                    // Usar el SP que actualiza solo los campos con valores
+                    String sentencia = "{CALL actualizarEvento(?, ?, ?, ?, ?)}";
+                    preparar = conexion.prepareStatement(sentencia);
                     preparar.setString(1, idEvento);
-                    preparar.setString(2,cedulaJuridica);
-                    preparar.setString(3,ubicacion);
-                    preparar.setString(4,capacidad);
-                    preparar.setString(5,titulo); //cambiar
-                    
-
-
+                    preparar.setString(2, cedulaJuridica);
+                    preparar.setString(3, ubicacion);
+                    preparar.setString(4, capacidad);
+                    preparar.setString(5, titulo);
+        
                     int exito = preparar.executeUpdate();
                     if (exito > 0) {
-                        JOptionPane.showMessageDialog(null, "La persona se ha actualizado con exito del banco");
+                        JOptionPane.showMessageDialog(null, "El evento se ha actualizado con éxito en la base de datos.");
+                        btnMostrar.doClick(); // Actualizar la tabla
                     } else {
-                        JOptionPane.showMessageDialog(null, "No se encuentra persona con ese Id");
+                        JOptionPane.showMessageDialog(null, "No se encuentra evento con ese ID.");
                     }
-
+        
                 } catch (SQLException e1) {
-
                     e1.printStackTrace();
+                    JOptionPane.showMessageDialog(null, "Error al actualizar el evento: " + e1.getMessage());
                 } finally {
-                    {
-                        try {
-                            if (conexion != null)
-                                conexion.close();
-                            if (preparar != null)
-                                preparar.close();
-
-                        } catch (SQLException e1) {
-                            e1.printStackTrace();
-                        }
+                    try {
+                        if (preparar != null)
+                            preparar.close();
+                        if (conexion != null)
+                            conexion.close();
+                    } catch (SQLException e1) {
+                        e1.printStackTrace();
                     }
                 }
-
-                
             }
         });
+        
 
 
 
@@ -231,6 +233,7 @@ public class AdEventos extends JFrame {
                     int filasEliminadas = preparar.executeUpdate();
                     if (filasEliminadas > 0) {
                         txtAreaResultado.setText("Evento eliminado con éxito. ID: " + idEvento);
+                        btnMostrar.doClick(); // Actualizar la tabla después de eliminar
                     } else {
                         txtAreaResultado.setText("No se encontró ningún evento con ID: " + idEvento);
                     }
