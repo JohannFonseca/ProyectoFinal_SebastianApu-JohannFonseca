@@ -3,6 +3,7 @@ package Visual;
 import javax.swing.*;
 
 import java.awt.Color;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
@@ -100,6 +101,13 @@ public class AdEventos extends JFrame {
         add(btnEliminar);
         add(btnMostrar);
         add(btnVolver);
+
+        ImageIcon userIcon1 = new ImageIcon("Imagenes/fondo.png"); // Ruta de la imagen
+        Image scaledUserImage1 = userIcon1.getImage().getScaledInstance(750, 480, Image.SCALE_SMOOTH); // Escalar la imagen
+        ImageIcon scaledUserIcon1 = new ImageIcon(scaledUserImage1); // Crear un nuevo ImageIcon con la imagen escalada
+        JLabel userIconLabel1 = new JLabel(scaledUserIcon1); // Usar el ImageIcon escalado en el JLabel
+        userIconLabel1.setSize(750, 480); // Posición y tamaño de la imagen
+        add(userIconLabel1);
 
         // Acción de Insertar
         btnInsertar.addActionListener(new ActionListener() {

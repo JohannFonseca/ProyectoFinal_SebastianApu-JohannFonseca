@@ -32,7 +32,7 @@ public class Login extends JFrame {
         setLayout(null);
 
         // Color de fondo de la ventana
-        getContentPane().setBackground(new Color(230, 214, 144)); 
+        getContentPane().setBackground(new Color(206, 237, 250)); 
 
         // Crear el primer JLabel para la primera línea de texto
         JLabel tituloLabel1 = new JLabel("Ingresa tu Usuario");

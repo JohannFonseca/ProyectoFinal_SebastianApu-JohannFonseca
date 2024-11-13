@@ -6,6 +6,7 @@ import javax.swing.table.DefaultTableModel;
 import Conexion.ConexionBD;
 
 import java.awt.Color;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
@@ -43,13 +44,15 @@ public class AdOrganizadores extends JFrame {
         JButton btnVolver = new JButton("Volver");
 
         // Ubicación y tamaño de los componentes
-        JLabel lblCedulaJuridica = new JLabel("Cédula Jurídica:");
-        lblCedulaJuridica.setBounds(20, 20, 120, 25);
-        txtCedulaJuridica.setBounds(150, 20, 150, 25);
+        JLabel lblCedulaJuridica = new JLabel("Cédula Jurídica");
+        lblCedulaJuridica.setBounds(350, 20, 120, 25);
+        lblCedulaJuridica.setForeground(Color.WHITE);
+        txtCedulaJuridica.setBounds(320, 60, 150, 25);
 
-        JLabel lblNombre = new JLabel("Nombre:");
-        lblNombre.setBounds(20, 60, 100, 25);
-        txtNombre.setBounds(150, 60, 150, 25);
+        JLabel lblNombre = new JLabel("Nombre");
+        lblNombre.setBounds(160, 20, 120, 25);
+        lblNombre.setForeground(Color.WHITE);
+        txtNombre.setBounds(110, 60, 150, 25);
 
       /*   txtAreaResultado.setBounds(20, 100, 530, 200); // El área de texto para mostrar resultados */
         btnInsertar.setBounds(20, 320, 120, 30);
@@ -62,7 +65,7 @@ public class AdOrganizadores extends JFrame {
         tableModel = new DefaultTableModel(columnNames, 0);
         table = new JTable(tableModel);
         JScrollPane scrollPane = new JScrollPane(table);
-        scrollPane.setBounds(20, 100, 400, 200); // Ajusta el tamaño y posición del JScrollPane
+        scrollPane.setBounds(90, 100, 400, 200); // Ajusta el tamaño y posición del JScrollPane
         add(scrollPane);
 
         // Añadir los componentes a la ventana
@@ -76,6 +79,13 @@ public class AdOrganizadores extends JFrame {
         add(btnEliminar);
         add(btnMostrar);
         add(btnVolver);
+
+         ImageIcon userIcon1 = new ImageIcon("Imagenes/fondo.png"); // Ruta de la imagen
+        Image scaledUserImage1 = userIcon1.getImage().getScaledInstance(600, 460, Image.SCALE_SMOOTH); // Escalar la imagen
+        ImageIcon scaledUserIcon1 = new ImageIcon(scaledUserImage1); // Crear un nuevo ImageIcon con la imagen escalada
+        JLabel userIconLabel1 = new JLabel(scaledUserIcon1); // Usar el ImageIcon escalado en el JLabel
+        userIconLabel1.setSize(600, 460); // Posición y tamaño de la imagen
+        add(userIconLabel1);
 
        // Acción de Insertar
 btnInsertar.addActionListener(new ActionListener() {
