@@ -146,26 +146,15 @@ btnActualizar.addActionListener(new ActionListener() {
                 return;
             }
 
-            // Construir la sentencia de actualización dinámica
-            StringBuilder sentenciaBuilder = new StringBuilder("UPDATE organizador SET ");
-            boolean actualizarNombre = !nombre.trim().isEmpty();
+            // Llamada al procedimiento almacenado
+            String llamadaProcedimiento = "{ CALL actualizarOrganizador(?, ?) }";
+            preparar = conexion.prepareStatement(llamadaProcedimiento);
 
-            if (actualizarNombre) {
-                sentenciaBuilder.append("nombre = ?");
-            }
-            sentenciaBuilder.append(" WHERE cedulaJuridica = ?");
+            // Asignar parámetros para el procedimiento almacenado
+            preparar.setString(1, cedulaJuridica);
+            preparar.setString(2, nombre);
 
-            // Crear PreparedStatement
-            preparar = conexion.prepareStatement(sentenciaBuilder.toString());
-
-            // Asignar parámetros según lo que se va a actualizar
-            int parametroIndex = 1;
-            if (actualizarNombre) {
-                preparar.setString(parametroIndex++, nombre);
-            }
-            preparar.setString(parametroIndex, cedulaJuridica);
-
-            // Ejecutar actualización
+            // Ejecutar la actualización
             int filasActualizadas = preparar.executeUpdate();
             if (filasActualizadas > 0) {
                 JOptionPane.showMessageDialog(null, "El Organizador se ha actualizado con éxito en la base de datos.");
@@ -189,6 +178,7 @@ btnActualizar.addActionListener(new ActionListener() {
         }
     }
 });
+
 
 btnMostrar.addActionListener(new ActionListener() {
     public void actionPerformed(ActionEvent e) {
