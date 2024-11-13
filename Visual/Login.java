@@ -21,6 +21,7 @@ public class Login extends JFrame {
         conexionBD = new ConexionBD();
 
         // Título de la ventana
+        //
         setTitle("Login");
 
         // Tamaño de la ventana
