@@ -112,7 +112,6 @@ public class Mantenimiento extends JFrame {
                 // Crear y mostrar la ventana de AdEventos
                 AdEventos ventanaEventos = new AdEventos();
                 ventanaEventos.setVisible(true);
-                ventanaEventos.btnMostrar.doClick();
                 // Cerrar la ventana actual (Mantenimiento)
                 dispose();
             }
