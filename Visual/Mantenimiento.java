@@ -112,6 +112,7 @@ public class Mantenimiento extends JFrame {
                 // Crear y mostrar la ventana de AdEventos
                 AdEventos ventanaEventos = new AdEventos();
                 ventanaEventos.setVisible(true);
+                ventanaEventos.btnMostrar.doClick();
                 // Cerrar la ventana actual (Mantenimiento)
                 dispose();
             }
@@ -125,6 +126,7 @@ public class Mantenimiento extends JFrame {
                 ventanaLogin.setVisible(true);
                 // Cerrar la ventana actual (Mantenimiento)
                 dispose();
+                  JOptionPane.showMessageDialog(null, "LOGOUT Completo");
             }
         });
 

@@ -168,7 +168,7 @@ btnActualizar.addActionListener(new ActionListener() {
             // Ejecutar actualización
             int filasActualizadas = preparar.executeUpdate();
             if (filasActualizadas > 0) {
-                txtAreaResultado.setText("Organizador actualizado con Cédula Jurídica: " + cedulaJuridica);
+                JOptionPane.showMessageDialog(null, "El Organizador se ha actualizado con éxito en la base de datos.");
                 btnMostrar.doClick(); // Actualizar la tabla después de actualizar
             } else {
                 txtAreaResultado.setText("No se encontró un organizador con la Cédula Jurídica: " + cedulaJuridica);
