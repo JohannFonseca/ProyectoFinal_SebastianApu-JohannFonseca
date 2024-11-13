@@ -14,7 +14,7 @@ public class Mantenimiento extends JFrame {
         setTitle("Ventana de Mantenimiento");
 
         // Tamaño de la ventana
-        setSize(500, 350);
+        setSize(500, 330);
 
         // Configuración para cerrar la ventana al presionar la 'X'
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -29,7 +29,7 @@ public class Mantenimiento extends JFrame {
         JLabel tituloLabel1 = new JLabel("¿Qué desea Administrar?");
 
         // Establece la posición (x, y) y tamaño (ancho, alto)
-        tituloLabel1.setBounds(100, 50, 400, 40); 
+        tituloLabel1.setBounds(95, 50, 400, 40); 
         // Color de texto en blanco
         tituloLabel1.setForeground(Color.WHITE); 
         // Fuente estilizada y tamaño
@@ -43,7 +43,7 @@ public class Mantenimiento extends JFrame {
         Image scaledUserImage3 = userIcon3.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH); // Escalar la imagen
         ImageIcon scaledUserIcon3 = new ImageIcon(scaledUserImage3); // Crear un nuevo ImageIcon con la imagen escalada
         JLabel userIconLabel3 = new JLabel(scaledUserIcon3); // Usar el ImageIcon escalado en el JLabel
-        userIconLabel3.setBounds(135, 106, 40, 40); // Posición y tamaño de la imagen
+        userIconLabel3.setBounds(145, 106, 40, 40); // Posición y tamaño de la imagen
         add(userIconLabel3);
 
         // Crear botón A1 y definir su posición y tamaño
@@ -52,14 +52,14 @@ public class Mantenimiento extends JFrame {
         botonA1.setForeground(Color.white);
         botonA1.setFocusPainted(false);
         botonA1.setContentAreaFilled(false);
-        botonA1.setBounds(130, 100, 215, 50); 
+        botonA1.setBounds(140, 100, 235, 50); 
         add(botonA1); 
 
         ImageIcon userIcon2 = new ImageIcon("Imagenes/evento.png"); // Ruta de la imagen
         Image scaledUserImage2 = userIcon2.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH); // Escalar la imagen
         ImageIcon scaledUserIcon2 = new ImageIcon(scaledUserImage2); // Crear un nuevo ImageIcon con la imagen escalada
         JLabel userIconLabel2 = new JLabel(scaledUserIcon2); // Usar el ImageIcon escalado en el JLabel
-        userIconLabel2.setBounds(135, 176, 40, 40); // Posición y tamaño de la imagen
+        userIconLabel2.setBounds(145, 176, 40, 40); // Posición y tamaño de la imagen
         add(userIconLabel2);
        
         // Crear botón A2 y definir su posición y tamaño
@@ -68,14 +68,14 @@ public class Mantenimiento extends JFrame {
         botonA2.setForeground(Color.white);
         botonA2.setFocusPainted(false);
         botonA2.setContentAreaFilled(false);
-        botonA2.setBounds(130, 170, 215, 50); 
+        botonA2.setBounds(140, 170, 235, 50); 
         add(botonA2); 
         
         ImageIcon userIcon = new ImageIcon("Imagenes/LOGOUT.png"); // Ruta de la imagen
         Image scaledUserImage = userIcon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH); // Escalar la imagen
         ImageIcon scaledUserIcon = new ImageIcon(scaledUserImage); // Crear un nuevo ImageIcon con la imagen escalada
         JLabel userIconLabel = new JLabel(scaledUserIcon); // Usar el ImageIcon escalado en el JLabel
-        userIconLabel.setBounds(180, 240, 30, 30); // Posición y tamaño de la imagen
+        userIconLabel.setBounds(200, 240, 30, 30); // Posición y tamaño de la imagen
         add(userIconLabel);
 
         JButton Logout = new JButton("     LOGOUT");
@@ -83,14 +83,14 @@ public class Mantenimiento extends JFrame {
         Logout.setForeground(Color.white);
         Logout.setFocusPainted(false);
         Logout.setContentAreaFilled(false);
-        Logout.setBounds(180, 240, 100, 30);  
+        Logout.setBounds(200, 240, 100, 30);  
         add(Logout); 
 
         ImageIcon userIcon1 = new ImageIcon("Imagenes/fondo.png"); // Ruta de la imagen
-        Image scaledUserImage1 = userIcon1.getImage().getScaledInstance(500, 350, Image.SCALE_SMOOTH); // Escalar la imagen
+        Image scaledUserImage1 = userIcon1.getImage().getScaledInstance(500, 330, Image.SCALE_SMOOTH); // Escalar la imagen
         ImageIcon scaledUserIcon1 = new ImageIcon(scaledUserImage1); // Crear un nuevo ImageIcon con la imagen escalada
         JLabel userIconLabel1 = new JLabel(scaledUserIcon1); // Usar el ImageIcon escalado en el JLabel
-        userIconLabel1.setSize(500, 350); // Posición y tamaño de la imagen
+        userIconLabel1.setSize(500, 330); // Posición y tamaño de la imagen
         add(userIconLabel1);
 
         
