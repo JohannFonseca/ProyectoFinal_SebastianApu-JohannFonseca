@@ -16,7 +16,7 @@ import Conexion.ConexionBD;
 import javax.swing.table.DefaultTableModel;
 
 public class AdEventos extends JFrame {
-    private JTextField txtIdEvento, txtCedulaJuridica, txtUbicacion, txtCapacidad, txtTitulo;
+    private JTextField  txtCedulaJuridica, txtUbicacion, txtCapacidad, txtTitulo;
     private JTextArea txtAreaResultado;
     private JTable tablaEventos;
     private DefaultTableModel tableModel;
@@ -30,7 +30,7 @@ public class AdEventos extends JFrame {
         getContentPane().setBackground(new Color(46, 64, 83)); 
 
         // Definir los campos de texto
-        txtIdEvento = new JTextField(10);
+        
         txtCedulaJuridica = new JTextField(10);
         txtUbicacion = new JTextField(10);
         txtCapacidad = new JTextField(10);
