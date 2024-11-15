@@ -59,7 +59,7 @@ public class Mantenimiento extends JFrame {
         Image scaledUserImage2 = userIcon2.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH); // Escalar la imagen
         ImageIcon scaledUserIcon2 = new ImageIcon(scaledUserImage2); // Crear un nuevo ImageIcon con la imagen escalada
         JLabel userIconLabel2 = new JLabel(scaledUserIcon2); // Usar el ImageIcon escalado en el JLabel
-        userIconLabel2.setBounds(145, 176, 40, 40); // Posición y tamaño de la imagen
+        userIconLabel2.setBounds(150, 176, 40, 40); // Posición y tamaño de la imagen
         add(userIconLabel2);
        
         // Crear botón A2 y definir su posición y tamaño
